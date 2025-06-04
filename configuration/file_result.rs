@@ -1,10 +1,9 @@
 use std::path::PathBuf;
 use std::fs;
 
-pub fn validate_path_entry<T: AsRef<PathBuf>>(path: T, location_search_type_identifier: LocationSearchType) -> Result<LocationSuccess, LocationFailure> {
+pub fn validate_path_entry(path: PathBuf, location_search_type_identifier: LocationSearchType) -> Result<LocationSuccess, LocationFailure> {
 
-    let path = path.as_ref();
-    let read_to_string_result = fs::read_to_string(path);
+    let read_to_string_result = fs::read_to_string(&path);
 
     if let Err(e) = read_to_string_result {
 
@@ -23,9 +22,6 @@ pub fn validate_path_entry<T: AsRef<PathBuf>>(path: T, location_search_type_iden
         search_type: location_search_type_identifier
 
     });
-
-    
-
 }
 
 pub struct LocationSuccess {
@@ -36,6 +32,7 @@ pub struct LocationSuccess {
 
 }
 
+#[derive(Debug)]
 pub struct LocationFailure {
 
     pub failure_type:LocationSearchType,
@@ -44,7 +41,23 @@ pub struct LocationFailure {
 
 }
 
+#[derive(Debug)]
 pub enum LocationSearchType {
 
     CurrentDirectory
+
+}
+
+impl LocationFailure {
+
+    pub fn DeterminingCurrentDirectoryFailed(message: String) -> Self {
+
+        return Self {
+
+            failure_type: LocationSearchType::CurrentDirectory,
+            message: message,
+            path: None
+
+        }
+    }
 }
