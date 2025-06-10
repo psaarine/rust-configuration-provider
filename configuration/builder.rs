@@ -1,26 +1,18 @@
 use std::vec::Vec;
-use std::path::PathBuf;
 use std::ffi::{OsStr, OsString};
 use super::location_functions;
-use super::file_result::{LocationFailure, LocationSearchType, LocationSuccess, validate_path_entry};
+use super::results::{LocationFailure,
+ConfigurationElementBuilderSuccess, 
+LocationSearchType, 
+LocationSuccess, 
+ConfigurationElementBuilderFailure,
+validate_path_entry};
 use serde::de::DeserializeOwned;
 
 pub struct ConfigurationElementBuilder<T: DeserializeOwned> {
     file_name: OsString,
     failures: Vec<LocationFailure>,
     item: Option<ConfigurationElementBuilderSuccess<T>>
-}
-
-pub struct ConfigurationElementBuilderSuccess<T> {
-
-    path: PathBuf,
-    element: T
-
-}
-
-pub struct ConfigurationElementBuilderFailure {
-
-    locations:Vec<LocationFailure>
 }
 
 impl<I: DeserializeOwned> ConfigurationElementBuilder<I> {
@@ -31,7 +23,7 @@ impl<I: DeserializeOwned> ConfigurationElementBuilder<I> {
 
         if let Err(e) = current_directory_with_configuration_file_name {
 
-            self.failures.push(LocationFailure::DeterminingCurrentDirectoryFailed(e.to_string()));
+            self.failures.push(LocationFailure::determining_current_directory_failed(e.to_string()));
 
             return self;
         };
@@ -39,8 +31,8 @@ impl<I: DeserializeOwned> ConfigurationElementBuilder<I> {
         let current_directory_with_configuration_file_name = current_directory_with_configuration_file_name.unwrap();
 
         let path_entry = validate_path_entry(current_directory_with_configuration_file_name, LocationSearchType::CurrentDirectory);
-        if let Err(error) = path_entry {
 
+        if let Err(error) = path_entry {
                 self.failures.push(error);
                 return self;
         }

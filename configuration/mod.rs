@@ -1,5 +1,5 @@
 mod builder;
 mod location_functions;
-mod file_result;
+mod results;
 
 pub use self::builder::ConfigurationElementBuilder;
