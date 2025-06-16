@@ -1,17 +1,26 @@
 use std::env::current_dir;
-use std::ffi::OsStr;
 use std::path::PathBuf;
+use super::LocationSearchType;
 
-pub fn get_current_directory_location<T: AsRef<OsStr>>(file_name: T) -> Result<PathBuf, Box<dyn std::error::Error>> {
+pub trait LocationSearcher {
+    fn try_get(&self) -> Result<PathBuf, String>;
+    fn search_type(&self) -> LocationSearchType;
+}
 
-    let current_dir = current_dir();
+pub struct CurrentDirectoryLocationSearcher;
 
-    if let Err(e) = current_dir {
+impl LocationSearcher for CurrentDirectoryLocationSearcher {
 
-        return Err(Box::new(e));
+
+    fn try_get(&self) -> Result<PathBuf, String> {
+
+    return Ok(current_dir()
+        .map_err(|error| error.to_string())?);
     }
 
-    let mut current_dir = current_dir.unwrap();
-    current_dir.set_file_name(file_name);
-    return Ok(current_dir);
+    fn search_type(&self) -> LocationSearchType {
+
+        return LocationSearchType::CurrentDirectory;
+    }
+
 }
