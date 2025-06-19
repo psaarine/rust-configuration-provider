@@ -1,4 +1,4 @@
-use super::{FileValidationResultType, FileValidationFailure, LocationSearchType};
+use super::errors::{FileValidationResultType, FileValidationFailure, LocationSearchType};
 use std::ffi::OsString;
 use std::path::PathBuf;
 use std::fs::File;

@@ -1,6 +1,6 @@
 use std::env::current_dir;
 use std::path::PathBuf;
-use super::LocationSearchType;
+use super::errors::LocationSearchType;
 
 pub trait LocationSearcher {
     fn try_get(&self) -> Result<PathBuf, String>;
@@ -10,7 +10,6 @@ pub trait LocationSearcher {
 pub struct CurrentDirectoryLocationSearcher;
 
 impl LocationSearcher for CurrentDirectoryLocationSearcher {
-
 
     fn try_get(&self) -> Result<PathBuf, String> {
 
