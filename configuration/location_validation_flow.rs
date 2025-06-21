@@ -8,7 +8,7 @@ use super::errors::*;
 type FileMapper<T> = fn(Vec<u8>) -> Result<T, String>;
 
 pub fn unwrap_file_location<T: DeserializeOwned>(file_name: OsString, 
-                            file_searcher: &impl LocationSearcher,
+                            file_searcher: &Box<dyn LocationSearcher>,
                             file_mapper: FileMapper<T>) -> Result<FileValidationSuccess<T>, FileValidationFailure> {
 
     let map_potential_directory_failure = |error:String| map_directory_search_error_to_file_validation_failure(file_searcher.search_type(), error);
